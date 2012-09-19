@@ -1,6 +1,6 @@
 module Masq
 	class PersonasController < ApplicationController
-		before_filter :login_required
+		before_filter :authenticate_user!
 		before_filter :store_return_url, :only => [:new, :edit]
 
     helper_method :persona
