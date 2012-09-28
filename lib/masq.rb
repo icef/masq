@@ -1,5 +1,4 @@
 require "masq/engine"
-require "masq/authenticated_system"
 require "masq/openid_server_system"
 require "masq/yubico"
 require "masq/active_record_openid_store/association"
