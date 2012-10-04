@@ -5,26 +5,10 @@ module Masq
     has_many :personas, :dependent => :delete_all, :order => 'id ASC'
     has_many :sites, :dependent => :destroy
     belongs_to :public_persona, :class_name => "Persona"
+    belongs_to :devise_account, :class_name => 'Account'
 
-    validates_presence_of :login
-    validates_length_of :login, :within => 3..254
-    validates_uniqueness_of :login, :case_sensitive => false
-    validates_format_of :login, :with => /^[A-Za-z0-9_@.-]+$/
-    validates_presence_of :email
-    validates_uniqueness_of :email, :case_sensitive => false
-    validates_format_of :email, :with => /(^([^@\s]+)@((?:[-_a-z0-9]+\.)+[a-z]{2,})$)|(^$)/i
-    validates_presence_of :password, :if => :password_required?
-    validates_presence_of :password_confirmation, :if => :password_required?
-    validates_length_of :password, :within => 6..40, :if => :password_required?
-    validates_confirmation_of :password, :if => :password_required?
     # check `rake routes' for whether this list is still complete when routes are changed
-    validates_exclusion_of :login, :in => %w[account session password help safe-login forgot_password reset_password login logout server consumer]
-
-    before_save   :encrypt_password
-    after_save    :deliver_forgot_password
-
-    attr_accessible :login, :email, :password, :password_confirmation, :public_persona_id, :yubikey_mandatory
-    attr_accessor :password
+    attr_accessible :public_persona_id, :yubikey_mandatory
 
     def to_param
       login
