@@ -1,3 +1,4 @@
+# This migration comes from masq (originally 20120312120002)
 class RemoveAuthenticationRelatedFieldsFromMasqAccount < ActiveRecord::Migration
   def up
     if defined?(Account)
@@ -5,6 +6,8 @@ class RemoveAuthenticationRelatedFieldsFromMasqAccount < ActiveRecord::Migration
         unless Account.find_by_email(masq_account.email) || Account.find_by_login(masq_account.login)
           account = Account.new(:login => masq_account.login, :email => masq_account.email)
           account.save(:validate => false)
+          masq_account.devise_account = account
+          masq_account.save
         end
       }
     end

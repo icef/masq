@@ -1,3 +1,4 @@
+# This migration comes from masq (originally 20120312120000)
 class MasqSchema < ActiveRecord::Migration
   def change
     # Check for existing masquerade tables. In case the tables already exist,
@@ -9,6 +10,7 @@ class MasqSchema < ActiveRecord::Migration
     if table_exists?(:accounts) && column_exists?(:accounts, :public_persona_id) &&
         column_exists?(:accounts, :yubico_identity)
       rename_table :accounts, :masq_accounts
+      puts 'PENG masq_accounts'
     else
       create_table :masq_accounts, :force => true do |t|
         t.boolean  :enabled, :default => true
