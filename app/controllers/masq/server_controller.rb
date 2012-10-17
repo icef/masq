@@ -159,7 +159,7 @@ module Masq
       if !openid_request.is_a?(OpenID::Server::CheckIDRequest)
         redirect_to root_path, :alert => t(:identity_verification_request_invalid)
       elsif !allow_verification?
-        flash[:notice] = logged_in? && !pape_requirements_met?(auth_time) ?
+        flash[:notice] = account_signed_in? && !pape_requirements_met?(auth_time) ?
           t(:service_provider_requires_reauthentication_last_login_too_long_ago) :
           t(:login_to_verify_identity)
         session[:return_to] = proceed_path
@@ -170,7 +170,7 @@ module Masq
     # The user must be logged in, he must be the owner of the claimed identifier
     # and the PAPE requirements must be met if applicable.
     def allow_verification?
-      logged_in? && correct_identifier? && pape_requirements_met?(auth_time)
+      account_signed_in? && correct_identifier? && pape_requirements_met?(auth_time)
     end
 
     # Is the user allowed to verify the claimed identifier? The user

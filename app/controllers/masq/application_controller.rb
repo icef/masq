@@ -1,7 +1,6 @@
 module Masq
   class ApplicationController < ActionController::Base
     include OpenidServerSystem
-    include AuthenticatedSystem
 
     helper_method :email_as_login?
 

@@ -4,5 +4,5 @@
 <%=simple_format t(:delegation_explanation) %>
 <pre>
 &lt;link rel="openid2.provider openid.server" href="<%= endpoint_url %>" /&gt;
-&lt;link rel="openid2.local_id openid.delegate" href="<%= identifier(logged_in? ? current_account : 'YOUR_LOGIN') %>" /&gt;
+&lt;link rel="openid2.local_id openid.delegate" href="<%= identifier(account_signed_in? ? current_account : 'YOUR_LOGIN') %>" /&gt;
 </pre>
