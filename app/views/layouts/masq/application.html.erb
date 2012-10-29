@@ -5,14 +5,15 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<% if identity_page? %>
 		<meta http-equiv="X-XRDS-Location" content="<%= identity_url(:account => @account, :format => :xrds, :protocol => scheme) %>" />
-		<link rel="openid.server openid2.provider" href="<%= endpoint_url %>" />
+		<link rel="openid.server openid2.provider" href="<%= masq.endpoint_url %>" />
 		<% elsif home_page? %>
 		<meta http-equiv="X-XRDS-Location" content="<%= server_url(:format => :xrds, :protocol => scheme) %>" />
 		<% end %>
-		<link rel="seatbelt.config" type="application/xml" href="<%= seatbelt_config_url(:format => :xml, :protocol => scheme) %>" />
+		<link rel="seatbelt.config" type="application/xml" href="<%= masq.seatbelt_config_url(:format => :xml, :protocol => scheme) %>" />
 		<link rel="Shortcut Icon" href="/favicon.ico" type="image/x-icon" />
 		<link rel="icon" href="/favicon.ico" type="image/ico" />
 		<%= stylesheet_link_tag 'masq/application' %>
+		<%= javascript_include_tag :application %>
 		<%= csrf_meta_tags %>
 	</head>
 	<body>
@@ -20,24 +21,22 @@
       <div class="wrap">
 				<h1><%= link_to Masq::Engine.config.masq['name'], root_path %></h1>
 				<ul id="navi">
-				<% if logged_in? %>
+				<% if account_signed_in? %>
 					<% unless checkid_request %>
 					<%= nav t(:my_identity), identity_path(current_account), 'accounts' => ['show'] %>
 					<%= nav t(:my_profile), edit_account_path, 'accounts' => ['edit', 'update'] %>
 					<%= nav t(:my_personas), account_personas_path, 'personas' => [] %>
 					<%= nav t(:my_trusted_sites), account_sites_path, 'sites' => [] %>
-					<% if not auth_type_used == :basic %>
-						<%= nav t(:logout), logout_path %>
-					<% end %>
+					<%= content_tag :li, link_to(t(:logout), main_app.destroy_account_session_path, :method => :delete) %>
 					<% else %>
 					<%= nav t(:current_verification_request), proceed_path, 'server' => [] %>
 					<% end %>
 				<% else %>
-					<%= nav t(:login_link), login_path, 'sessions' => ['new', 'create'] %>
+					<%= nav t(:login_link), main_app.new_account_session_path, 'sessions' => ['new', 'create'] %>
 					<% unless Masq::Engine.config.masq['disable_registration'] %>
-						<%= nav t(:signup_link), new_account_path, 'accounts' => ['new', 'create'] %>
+						<%= nav t(:signup_link), main_app.new_account_registration_path, 'accounts' => ['new', 'create'] %>
 					<% end %>
-					<%= nav t(:help), help_path, 'info' => ['help'] %>
+					<%= nav t(:help), masq.help_path, 'info' => ['help'] %>
 				<% end %>
 				</ul>
 			</div>
@@ -62,7 +61,7 @@
 				<span class="note">
 					powered by <%= link_to 'masq', 'https://github.com/dbloete/masqu' %>
 					and <%= link_to image_tag('masq/openid_symbol.png') + " OpenID", 'http://openid.net/' %> |
-					<%= link_to t(:get_help), help_path %>
+					<%= link_to t(:get_help), masq.help_path %>
 				</span>
 			</div>
 		</div>

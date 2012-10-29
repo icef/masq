@@ -54,5 +54,9 @@ module Masq
       is_active = pages[params[:controller]].include?(params[:action]) if is_active && !pages[params[:controller]].empty?
       is_active
     end
+
+    def scheme
+      Masq::Engine.config.masq['use_ssl'] ? 'https' : 'http'
+    end
   end
 end

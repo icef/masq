@@ -1,5 +1,6 @@
 module Masq
   class ApplicationController < ActionController::Base
+    include ApplicationHelper
     include OpenidServerSystem
 
     helper_method :email_as_login?
@@ -62,10 +63,6 @@ module Masq
     end
 
     private
-
-    def scheme
-      Masq::Engine.config.masq['use_ssl'] ? 'https' : 'http'
-    end
 
     def email_as_login?
       Masq::Engine.config.masq['email_as_login']
