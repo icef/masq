@@ -6,7 +6,7 @@ module Masq
     helper_method :site, :persona
 
     def index
-      @sites = current_account.sites.includes(:persona).order(:url)
+      @sites = current_account.masq_account.sites.includes(:persona).order(:url)
 
       respond_to do |format|
         format.html
@@ -14,7 +14,7 @@ module Masq
     end
 
     def edit
-      site.persona = current_account.personas.find(params[:persona_id]) if params[:persona_id]
+      site.persona = current_account.masq_account.personas.find(params[:persona_id]) if params[:persona_id]
     end
 
     def update
@@ -39,7 +39,7 @@ module Masq
     private
 
     def site
-      @site ||= current_account.sites.find(params[:id])
+      @site ||= current_account.masq_account.sites.find(params[:id])
     end
 
     def persona

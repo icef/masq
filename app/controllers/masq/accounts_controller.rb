@@ -5,7 +5,7 @@ module Masq
     before_filter :detect_xrds, :only => :show
 
     def show
-      @account = Account.by_devise_account_id(params[:account])
+      @account = Account.by_devise_account(:login => params[:account])
       raise ActiveRecord::RecordNotFound if @account.nil?
 
       respond_to do |format|
@@ -21,8 +21,8 @@ module Masq
       attrs.delete(:email) if email_as_login?
       attrs.delete(:login)
 
-      if current_account.update_attributes(attrs)
-        redirect_to edit_account_path(:account => current_account), :notice => t(:profile_updated)
+      if current_account.masq_account.update_attributes(attrs)
+        redirect_to edit_account_path(:account => current_account.masq_account), :notice => t(:profile_updated)
       else
         render :action => 'edit'
       end

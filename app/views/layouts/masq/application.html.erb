@@ -23,7 +23,7 @@
 				<ul id="navi">
 				<% if account_signed_in? %>
 					<% unless checkid_request %>
-					<%= nav t(:my_identity), identity_path(current_account), 'accounts' => ['show'] %>
+					<%= nav t(:my_identity), identity_path(current_account.masq_account), 'accounts' => ['show'] %>
 					<%= nav t(:my_profile), edit_account_path, 'accounts' => ['edit', 'update'] %>
 					<%= nav t(:my_personas), account_personas_path, 'personas' => [] %>
 					<%= nav t(:my_trusted_sites), account_sites_path, 'sites' => [] %>

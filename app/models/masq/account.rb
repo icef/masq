@@ -49,8 +49,11 @@ module Masq
       update_attribute(:enabled, false)
     end
 
-    def self.by_devise_account_id(id)
-      if devise_account = ::Account.where(:id => id).first
+    def self.by_devise_account(attr_hsh)
+      selector = attr_hsh[:id] ? { :id => attr_hsh[:id] } : { :login => attr_hsh[:login] }
+      return unless selector
+
+      if devise_account = ::Account.where(selector).first
         if devise_account.masq_account.nil?
           devise_account.masq_account = self.create
         else

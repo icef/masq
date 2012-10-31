@@ -43,8 +43,8 @@ module Masq
     # registration data) is requested. Otherwise the user will be redirected
     # to the decision page.
     def proceed
-      identity = identifier(current_account)
-      if @site = current_account.sites.find_by_url(checkid_request.trust_root)
+      identity = identifier(current_account.masq_account)
+      if @site = current_account.masq_account.sites.find_by_url(checkid_request.trust_root)
         resp = checkid_request.answer(true, nil, identity)
         resp = add_sreg(resp, @site.sreg_properties) if sreg_request
         resp = add_ax(resp, @site.ax_properties) if ax_fetch_request
@@ -62,8 +62,8 @@ module Masq
     # Displays the decision page on that the user can confirm the request and
     # choose which data should be transfered to the relying party.
     def decide
-      @site = current_account.sites.find_or_initialize_by_url(checkid_request.trust_root)
-      @site.persona = current_account.personas.find(params[:persona_id] || :first) if sreg_request || ax_store_request || ax_fetch_request
+      @site = current_account.masq_account.sites.find_or_initialize_by_url(checkid_request.trust_root)
+      @site.persona = current_account.masq_account.personas.find(params[:persona_id] || :first) if sreg_request || ax_store_request || ax_fetch_request
     end
 
     # This action is called by submitting the decision form, the information entered by
@@ -73,15 +73,15 @@ module Masq
       if params[:cancel]
         cancel
       else
-        resp = checkid_request.answer(true, nil, identifier(current_account))
+        resp = checkid_request.answer(true, nil, identifier(current_account.masq_account))
         if params[:always]
-          @site = current_account.sites.find_or_create_by_persona_id_and_url(params[:site][:persona_id], params[:site][:url])
+          @site = current_account.masq_account.sites.find_or_create_by_persona_id_and_url(params[:site][:persona_id], params[:site][:url])
           @site.update_attributes(params[:site])
         elsif sreg_request || ax_fetch_request
-          @site = current_account.sites.find_or_initialize_by_persona_id_and_url(params[:site][:persona_id], params[:site][:url])
+          @site = current_account.masq_account.sites.find_or_initialize_by_persona_id_and_url(params[:site][:persona_id], params[:site][:url])
           @site.attributes = params[:site]
         elsif ax_store_request
-          @site = current_account.sites.find_or_initialize_by_persona_id_and_url(params[:site][:persona_id], params[:site][:url])
+          @site = current_account.masq_account.sites.find_or_initialize_by_persona_id_and_url(params[:site][:persona_id], params[:site][:url])
           not_supported, not_accepted, accepted = [], [], []
           ax_store_request.data.each do |type_uri, values|
             if property = Persona.attribute_name_for_type_uri(type_uri)
@@ -177,7 +177,7 @@ module Masq
     # must be logged in, so that we know his identifier or the identifier
     # has to be selected by the server (id_select).
     def correct_identifier?
-      (openid_request.identity == identifier(current_account) || openid_request.id_select)
+      (openid_request.identity == identifier(current_account.masq_account) || openid_request.id_select)
     end
 
     # Clears the stored request and answers

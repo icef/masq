@@ -6,7 +6,7 @@ module Masq
     helper_method :persona
 
 		def index
-			@personas = current_account.personas
+			@personas = current_account.masq_account.personas
 
 			respond_to do |format|
 				format.html
@@ -50,8 +50,8 @@ module Masq
 
 		def persona
 			@persona ||= params[:id].present? ?
-        current_account.personas.find(params[:id]) :
-        current_account.personas.new(params[:persona])
+        current_account.masq_account.personas.find(params[:id]) :
+        current_account.masq_account.personas.new(params[:persona])
 		end
 
 		def redirect_back_or_default(default)

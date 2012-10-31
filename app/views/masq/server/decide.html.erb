@@ -28,10 +28,10 @@
 <%= form_tag decide_path, :method => :get, :id => 'persona_select', :style => 'display:none;' do %>
 
 	<h3><%= t(:choose_persona_title) %></h3>
-	<% unless current_account.personas.empty? %>
+	<% unless current_account.masq_account.personas.empty? %>
 	<div class="row">
 		<select id="persona_id" name="persona_id">
-			<%= options_from_collection_for_select(current_account.personas, :id, :title, @site.persona.id) %>
+			<%= options_from_collection_for_select(current_account.masq_account.personas, :id, :title, @site.persona.id) %>
 		</select>
 	</div>
 	<div>
@@ -113,5 +113,5 @@
 		<%= submit_tag t(:cancel_request), :name => 'cancel' %>
 	</div>
 
-<% end unless current_account.personas.empty? %>
+<% end unless current_account.masq_account.personas.empty? %>
 
