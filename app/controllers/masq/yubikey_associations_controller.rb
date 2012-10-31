@@ -1,6 +1,6 @@
 module Masq
   class YubikeyAssociationsController < ApplicationController
-    before_filter :authenticate_user!
+    before_filter :authenticate_account!
 
     def create
       if current_account.associate_with_yubikey(params[:yubico_otp])

@@ -1,7 +1,7 @@
 module Masq
   class AccountsController < ApplicationController
     # before_filter :check_disabled_registration, :only => [:new, :create] # TODO: move?
-    before_filter :authenticate_user!, :except => [:show, :new, :create, :activate, :resend_activation_email]
+    before_filter :authenticate_account!, :except => [:show, :new, :create, :activate, :resend_activation_email]
     before_filter :detect_xrds, :only => :show
 
     def show

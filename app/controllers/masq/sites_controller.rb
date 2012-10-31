@@ -1,6 +1,6 @@
 module Masq
   class SitesController < ApplicationController
-    before_filter :authenticate_user!
+    before_filter :authenticate_account!
     before_filter :find_personas, :only => [:create, :edit, :update]
 
     helper_method :site, :persona
