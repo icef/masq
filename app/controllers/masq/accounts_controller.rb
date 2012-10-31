@@ -5,7 +5,7 @@ module Masq
     before_filter :detect_xrds, :only => :show
 
     def show
-      @account = Account.where(:login => params[:account], :enabled => true).first
+      @account = Account.by_devise_account_id(params[:account])
       raise ActiveRecord::RecordNotFound if @account.nil?
 
       respond_to do |format|

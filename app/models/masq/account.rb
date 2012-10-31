@@ -5,10 +5,14 @@ module Masq
     has_many :personas, :dependent => :delete_all, :order => 'id ASC'
     has_many :sites, :dependent => :destroy
     belongs_to :public_persona, :class_name => "Persona"
-    belongs_to :devise_account, :class_name => 'Account'
+    belongs_to :devise_account, :class_name => '::Account', :foreign_key => "account_id"
 
     # check `rake routes' for whether this list is still complete when routes are changed
-    attr_accessible :public_persona_id, :yubikey_mandatory
+    attr_accessible :public_persona_id, :yubikey_mandatory, :account_id
+
+    def login
+      devise_account.login
+    end
 
     def to_param
       login
@@ -43,6 +47,16 @@ module Masq
 
     def disable!
       update_attribute(:enabled, false)
+    end
+
+    def self.by_devise_account_id(id)
+      if devise_account = ::Account.where(:id => id).first
+        if devise_account.masq_account.nil?
+          devise_account.masq_account = self.create
+        else
+          devise_account.masq_account
+        end
+      end
     end
 
     private
